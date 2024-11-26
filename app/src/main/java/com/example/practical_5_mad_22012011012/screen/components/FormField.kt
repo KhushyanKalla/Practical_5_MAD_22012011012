@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun FormField(
     Label: String,
+    textState: String,
+    onTextChange: (String) -> Unit,
     isNumber: Boolean = false,
     isPasswordField: Boolean = false
 ) {
@@ -30,7 +32,8 @@ fun FormField(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = Label,
+        Text(
+            text = Label,
             fontSize = 18.sp,
             modifier = Modifier.weight(1f)
         )
@@ -38,10 +41,10 @@ fun FormField(
             OutlinedTextField(
                 label = { Text("Enter $Label") },
                 placeholder = { Text("Enter $Label") },
-                value = "",
-                onValueChange = {},
+                value = textState,
+                onValueChange = onTextChange,
                 modifier = Modifier
-                    .padding(start = 16.dp)
+                    .padding(start = 6.dp)
                     .weight(2f),
                 textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -51,10 +54,14 @@ fun FormField(
             OutlinedTextField(
                 label = { Text("Enter $Label") },
                 placeholder = { Text("Enter $Label") },
-                value = "",
-                onValueChange = {},
+                value = textState,
+                onValueChange = {newValue ->
+                    if(newValue.all {it.isDigit()}){
+                        onTextChange(newValue)
+                    }//purpose to set value , means we can take input but using this we can send output value
+                },
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(6.dp)
                     .weight(2f),
                 textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
                 visualTransformation =
@@ -63,6 +70,6 @@ fun FormField(
                 else
                     VisualTransformation.None)
             )
-            }
+        }
     }
 }
